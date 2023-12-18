@@ -21,5 +21,14 @@ def index():
 def login():
     pass
 
+@app.post(f'{api_route}/auth/register')
+def register():
+    pass
+
+@app.post(f'{api_route}/auth/ping')
+def ping():
+    pass
+
+
 if __name__ == '__main__':
     uvicorn.run('main:app',reload=True)

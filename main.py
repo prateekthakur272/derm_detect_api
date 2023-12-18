@@ -9,6 +9,7 @@ import pyrebase
 from firebase_config import firebaseConfig
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
+from fastapi.requests import Request
 
 # import models
 from models.login_schema import LoginSchema
@@ -71,8 +72,11 @@ def create_account(user_credentials:RegisterSchema):
     
 
 @app.post(f'{api_route}/auth/ping')
-def validate_token():
-    pass
+def validate_token(request:Request):
+    header = request.headers
+    jwt = header.get('authorization')
+    user = auth.verify_id_token(jwt)
+    return {'uid':user['uid']}
 
 
 if __name__ == '__main__':

@@ -1,4 +1,4 @@
-# Prateek Thakur 2023
+# Prateek Thakur 2023 Derm Detect
 
 # import packages
 from fastapi import FastAPI

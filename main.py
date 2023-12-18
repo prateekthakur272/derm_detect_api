@@ -39,7 +39,22 @@ def index():
     
 @app.post(f'{api_route}/auth/login')
 def create_access_token(user_credentials:LoginSchema):
-    pass
+    email = user_credentials.email
+    password = user_credentials.password
+    
+    try:
+        user = firebase.auth().sign_in_with_email_and_password(
+            email= email,
+            password= password
+        )
+        
+        token = user['idToken']
+        return JSONResponse(content={
+            'token': token
+        },status_code=200)
+        
+    except:
+        raise HTTPException(status_code=400, detail= 'invalid credentials')
 
 @app.post(f'{api_route}/auth/register')
 def create_account(user_credentials:RegisterSchema):

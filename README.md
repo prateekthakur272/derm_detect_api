@@ -52,8 +52,15 @@ curl -X POST http://127.0.0.1:8000/api/auth/login -H "Content-Type: application/
 ```
 
 ### Ping
-Login user with email and password returns jwt
+Validate user jwt
 ```bash
 curl -X POST http://127.0.0.1:8000/api/auth/ping -H "Content-Type: application/json" -H "Authorization: your_access_token"
+```
+
+
+### Predict
+make prediction by uploading an image
+```bash
+curl -X POST http://127.0.0.1:8000/api/auth/predict -H "Content-Type: "Content-Type: multipart/form-data" -F "file=@path/to/your/image.jpg"
 ```
 

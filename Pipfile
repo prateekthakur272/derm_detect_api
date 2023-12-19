@@ -9,8 +9,11 @@ uvicorn = "*"
 firebase-admin = "*"
 pyrebase4 = "*"
 setuptools = "*"
+tensorflow = "2.15.0"
+python-multipart = "*"
+pillow = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.12"
+python_version = "3.11"

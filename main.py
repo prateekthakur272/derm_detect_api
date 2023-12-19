@@ -1,6 +1,7 @@
 # Prateek Thakur 2023 Derm Detect
 
 # import packages
+from io import BytesIO
 from fastapi import FastAPI
 import uvicorn
 import firebase_admin
@@ -10,11 +11,14 @@ from firebase_config import firebaseConfig
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
 from fastapi.requests import Request
-
+from keras.models import load_model
+from fastapi import UploadFile
 # import models
 from models.login_schema import LoginSchema
 from models.register_schema import RegisterSchema
 
+# prediction model
+from prediction_model.cancer_model import predict_image, allowed_file, ALLOWED_EXTENSIONS
 
 description = 'API for Derm-Detect cancer detection application'
 title = 'Derm-Detect'
@@ -30,6 +34,8 @@ if not firebase_admin._apps:
     firebase_admin.initialize_app(cred)
     
 firebase = pyrebase.initialize_app(firebaseConfig)
+
+predictor = load_model('prediction_model/model.h5')
 
 @app.get(f'{api_route}/index')
 def index():
@@ -77,6 +83,17 @@ def validate_token(request:Request):
     jwt = header.get('authorization')
     user = auth.verify_id_token(jwt)
     return {'uid':user['uid']}
+
+@app.post(f'{api_route}/auth/predict')
+def predict(file: UploadFile):
+    print(file.filename)
+    if allowed_file(file.filename):
+        contents = file.file.read()
+        bytes_io_object = BytesIO(contents)
+        result = predict_image(bytes_io_object)
+        return result
+    else:
+        raise HTTPException(status_code=400, detail= f'only {ALLOWED_EXTENSIONS} are supported')
 
 
 if __name__ == '__main__':
